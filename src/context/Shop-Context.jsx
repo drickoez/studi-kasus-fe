@@ -1,26 +1,31 @@
 import React, { createContext, useEffect, useState } from "react";
 import axiosDriver from "../config/axios";
-import Product from "../pages/shop/Product";
-
 const ShopContext = createContext(null);
 
 const ShopContextProvider = (props) => {
+  const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState([]);
 
-  useEffect(() => {
-    const storedCartItems = localStorage.getItem("cartItems");
-    if (storedCartItems) {
-      setCartItems(JSON.parse(storedCartItems));
-    }
-  }, []);
+  // useEffect(() => {
+  // }, []);
 
   useEffect(() => {
+    fetchData();
     axiosDriver.get("http://localhost:3000/api/carts").then((response) => {
       if (response.data?.items) {
         setCartItems(response.data.items);
       }
     });
   }, []);
+
+  const fetchData = async () => {
+    const response = await axiosDriver.get(
+      "http://localhost:3000/api/products"
+    );
+    if (response.data.error !== 1) {
+      setProducts(response.data.data);
+    }
+  };
 
   const getCartIndex = (productId) => {
     const cartIndex = cartItems.findIndex((cartItem) => {
@@ -41,28 +46,18 @@ const ShopContextProvider = (props) => {
       });
   };
 
-  // const getTotalCartAmount = () => {
-  //   let totalAmount = 0;
-  //   for (const item of cartItems) {
-  //     let itemInfo = PRODUCTS.find((product) => product._id === item._id);
-  //     totalAmount += item.qty * itemInfo.price;
-  //   }
-  //   return totalAmount;
-  // };
-
   const addToCart = (productId) => {
-    let newCartItems = [...cartItems];
     const index = getCartIndex(productId);
+    let newCartItems = [...cartItems];
 
     if (index > -1) {
       newCartItems[index].qty += 1;
     } else {
-      const product = Product.find((product) => product._id === productId);
-      newCartItems.push({ _id: null, product: product, qty: 1 });
+      const product = products.find((product) => product._id === productId);
+      newCartItems.push({ _id: productId, product: product, qty: 1 });
     }
     updateAPI(newCartItems);
     setCartItems(newCartItems);
-    localStorage.setItem("cartItems", JSON.stringify(newCartItems));
   };
 
   const removeCart = (productId) => {
@@ -89,7 +84,8 @@ const ShopContextProvider = (props) => {
       newCartItems[itemIndex].qty = newAmount;
     }
 
-    setCartItems(newCartItems);
+    updateAPI(newCartItems); // Update API
+    setCartItems(newCartItems); // Update state
   };
 
   const getCartQty = (productId) => {
@@ -97,13 +93,17 @@ const ShopContextProvider = (props) => {
     return index > -1 ? cartItems[index].qty : null;
   };
 
+  const resetCart = () => {
+    setCartItems([]);
+  };
+
   const contextValue = {
     cartItems,
     addToCart,
     removeCart,
     updateCartItemCount,
-    // getTotalCartAmount,
     getCartQty,
+    resetCart,
   };
 
   return (

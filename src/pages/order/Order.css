@@ -1,0 +1,58 @@
+.main {
+  width: 100%;
+  margin-left: 300px;
+  margin-top: 10px;
+  min-height: 100vh;
+  border-radius: 5px;
+  padding: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid #ddd;
+  margin-top: 20px;
+  text-align: center;
+}
+th,
+td {
+  text-align: center;
+  padding: 14px;
+  border-bottom: 1px solid black;
+}
+
+tr:hover {
+  background-color: rgb(214, 210, 210);
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.pay-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  margin-top: 10px;
+  width: 50%;
+  height: 30px;
+  background-color: rgb(134, 208, 241);
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.pay-btn:hover {
+  background-color: rgb(96, 96, 252);
+  color: white;
+}
+
+.pagination-table {
+  position: fixed;
+  bottom: 1, 1%;
+  left: 54%;
+  transform: translateX(-50%);
+}

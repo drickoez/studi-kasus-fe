@@ -1,0 +1,38 @@
+.invoice {
+  margin-left: 25%;
+  margin-top: 20px;
+}
+
+.total {
+  text-align: start;
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+.buyer {
+  margin: 20px auto;
+}
+
+.payment-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.payment-btn button {
+  width: 30%;
+  height: 40px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.payment-btn button:disabled,
+.payment-btn button[disabled] {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}

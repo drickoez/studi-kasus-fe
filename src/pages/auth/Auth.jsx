@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Auth.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axiosDriver from "../../config/axios";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,9 +16,14 @@ const Auth = () => {
   useEffect(() => {
     // Check if the user is already logged in
     const checkLoggedIn = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
       try {
-        const response = await fetch("/api/me");
-        if (response.ok) {
+        const response = await axios.get("http://localhost:3000/auth/me");
+        if (response.status === 200) {
           setIsLoggedIn(true);
         } else {
           setIsLoggedIn(false);
@@ -42,6 +48,7 @@ const Auth = () => {
       });
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
+      setIsLoggedIn(true); // Update isLoggedIn state after successful login
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -50,37 +57,45 @@ const Auth = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
+      const response = await axios.post("http://localhost:3000/auth/register", {
+        name,
+        email,
+        password,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        // Handle successful registration
-        setIsLoggedIn(true);
+      if (response.status === 200) {
+        handleLogin();
       } else {
-        const errorData = await response.json();
-        // Handle registration error
+        console.log("Registration error:", response.data);
       }
     } catch (error) {
-      // Handle network error
+      console.log("Network error:", error);
     }
   };
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("/api/logout");
-      if (response.ok) {
-        setIsLoggedIn(false);
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:3000/auth/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("cartItems");
+        setIsLoggedIn(false); // Update isLoggedIn state after successful logout
+        navigate("/");
       } else {
-        // Handle logout error
+        console.log("Logout error:", response.data);
       }
     } catch (error) {
-      // Handle network error
+      console.log("Network error:", error);
     }
   };
 
@@ -97,43 +112,43 @@ const Auth = () => {
   if (isLoggedIn) {
     return (
       <div className="form-container">
-        <h1>Welcome, {email}</h1>
+        <h1>Logout?</h1>
         <button onClick={handleLogout}>Logout</button>
       </div>
     );
-  }
-
-  return (
-    <div className="form-container">
-      <h1>{isLogin ? "Login" : "Register"}</h1>
-      <form onSubmit={handleSubmit}>
-        {!isLogin && (
+  } else {
+    return (
+      <div className="form-container">
+        <h1>{isLogin ? "Login" : "Register"}</h1>
+        <form onSubmit={handleSubmit}>
+          {!isLogin && (
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          )}
           <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-        )}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">{isLogin ? "Login" : "Register"}</button>
-        <p onClick={handleToggleForm}>
-          {isLogin ? "Create an account" : "Already have an account? Login"}
-        </p>
-      </form>
-    </div>
-  );
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="submit">{isLogin ? "Login" : "Register"}</button>
+          <p onClick={handleToggleForm}>
+            {isLogin ? "Create an account" : "Already have an account? Login"}
+          </p>
+        </form>
+      </div>
+    );
+  }
 };
 
 export default Auth;
