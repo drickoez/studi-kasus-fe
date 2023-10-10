@@ -98,7 +98,7 @@ const Categories = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <button className="add-button" onClick={handleAdd}>
+        <button className="addC-button" onClick={handleAdd}>
           Add Category
         </button>
       </div>

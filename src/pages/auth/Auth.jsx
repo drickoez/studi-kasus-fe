@@ -22,7 +22,7 @@ const Auth = () => {
         return;
       }
       try {
-        const response = await axiosDriver.get("http://localhost:3000/auth/me");
+        const response = await axios.get("http://localhost:3000/auth/me");
         if (response.status === 200) {
           setIsLoggedIn(true);
         } else {

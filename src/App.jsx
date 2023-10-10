@@ -11,6 +11,7 @@ import Tags from "./pages/tags/Tags";
 import Order from "./pages/order/Order";
 import Invoice from "./pages/invoice/Invoice";
 import Address from "./pages/address/Address";
+import Detail from "./pages/shop/Detail";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path="/auth" element={<Auth />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/products/:id" element={<Detail />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/edit-category/:id" element={<Categories />} />
               <Route path="/tags" element={<Tags />} />

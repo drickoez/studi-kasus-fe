@@ -76,7 +76,7 @@
   border-radius: 4px;
 }
 
-.add-button {
+.addC-button {
   background-color: #3498db;
   color: white;
   border: none;
@@ -85,6 +85,7 @@
   margin-left: 10px;
   width: 20%;
   cursor: pointer;
+  font-size: 10px;
 }
 
 .add-button:hover {

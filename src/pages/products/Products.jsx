@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductsItems from "./Products-items";
 import "./Products.css";
-import axios from "axios";
 import axiosDriver from "../../config/axios";
 import { MagnifyingGlass } from "phosphor-react";
 
@@ -100,7 +99,7 @@ const Products = () => {
     formData.append("price", newProduct.price);
     formData.append("description", newProduct.description);
     formData.append("category", newProduct.category);
-    formData.append("tags", newProduct.tags);
+    formData.append("tags[]", newProduct.tags);
 
     if (editProduct) {
       const response = await axiosDriver.put(
@@ -113,10 +112,7 @@ const Products = () => {
         }
       );
       if (response.data.error !== 1) {
-        const updatedProductList = productList.map((product) =>
-          product._id === editProduct._id ? response.data.data : product
-        );
-        setProductList(updatedProductList);
+        fetchData();
         handleCloseModal();
       }
     } else {
@@ -131,7 +127,7 @@ const Products = () => {
       );
 
       if (response.data.error !== 1) {
-        setProductList([...productList, response.data.data]);
+        fetchData();
         handleCloseModal();
       }
     }
@@ -210,7 +206,7 @@ const Products = () => {
               >
                 <option value="">Select a category</option>
                 {categories.map((category) => (
-                  <option key={category._id} value={category._id}>
+                  <option key={category._id} value={category.name}>
                     {category.name}
                   </option>
                 ))}
@@ -223,7 +219,7 @@ const Products = () => {
               >
                 <option value="">Select tags</option>
                 {tags.map((tag) => (
-                  <option key={tag._id} value={tag._id}>
+                  <option key={tag._id} value={tag.name}>
                     {tag.name}
                   </option>
                 ))}

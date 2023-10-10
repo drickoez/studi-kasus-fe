@@ -26,6 +26,7 @@
   border-radius: 25px;
   margin: 10px 10px;
   padding: 20px 10px;
+  background-color: white;
 }
 
 .cart-items img {
@@ -33,6 +34,7 @@
   height: 70%;
   margin-left: 50px;
   margin-right: 100px;
+  border-radius: 7px;
 }
 
 .cart-items .description {

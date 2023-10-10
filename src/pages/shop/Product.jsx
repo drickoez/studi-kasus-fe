@@ -23,7 +23,9 @@ const Product = (props) => {
   console.log(cartItems);
   return (
     <div className="product">
-      <img src={`http://localhost:3000/images/products/${image_url}`} />
+      <Link className="detail" to={`/products/${_id} `} key={_id}>
+        <img src={`http://localhost:3000/images/products/${image_url}`} />
+      </Link>
       <div className="description">
         <p>
           <b>{name}</b>
